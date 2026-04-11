@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mood-sunrise: linear-gradient(125deg, #ff9966 0%, #ff5e62 45%, #ffc371 100%);
+  --mood-ocean: linear-gradient(130deg, #1d4350 0%, #4cb8c4 100%);
+  --mood-forest: linear-gradient(125deg, #134e5e 0%, #71b280 100%);
+}
+
+@layer base {
+  body {
+    @apply text-gray-100 bg-navy-900;
+    background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.16), transparent 26%), radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.14), transparent 26%), linear-gradient(180deg, #050610 0%, #080b23 100%);
+    background-attachment: fixed;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border shadow-lg bg-white/10 backdrop-blur-md border-white/20 rounded-xl;
+  }
+
+  .glass-strong {
+    @apply border shadow-xl bg-white/20 backdrop-blur-lg border-white/30 rounded-xl;
+  }
+
+  .btn-primary {
+    @apply px-6 py-2 font-semibold text-white transition-all duration-200 transform rounded-lg shadow-lg bg-electric-500 hover:bg-electric-600 hover:shadow-xl hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2 font-semibold text-white transition-all duration-200 border rounded-lg bg-navy-700 hover:bg-navy-600 border-navy-500;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 text-gray-100 placeholder-gray-400 transition-all border rounded-lg bg-navy-800/50 border-navy-600 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-transparent;
+  }
+
+  .card {
+    @apply p-6 transition-all duration-300 glass hover:shadow-2xl;
+  }
+
+  .mood-hero {
+    background: linear-gradient(120deg, rgba(12, 28, 58, 0.95), rgba(22, 74, 88, 0.88), rgba(86, 52, 138, 0.6));
+  }
+
+  .mood-noise {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .mood-calm {
+    background: linear-gradient(140deg, rgba(29, 67, 80, 0.58), rgba(76, 184, 196, 0.22));
+    border: 1px solid rgba(120, 230, 242, 0.24);
+  }
+
+  .mood-warm {
+    background: linear-gradient(140deg, rgba(122, 62, 35, 0.5), rgba(255, 153, 102, 0.2));
+    border: 1px solid rgba(255, 190, 150, 0.26);
+  }
+
+  .mood-chip {
+    @apply px-3 py-2 text-sm font-semibold text-center text-white transition-all duration-300 rounded-xl;
+  }
+
+  .mood-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .mood-chip-sunrise {
+    background: var(--mood-sunrise);
+  }
+
+  .mood-chip-ocean {
+    background: var(--mood-ocean);
+  }
+
+  .mood-chip-forest {
+    background: var(--mood-forest);
+  }
+
+  .mood-chip-ember {
+    background: linear-gradient(130deg, #8e2a2a 0%, #b24545 50%, #f26b6b 100%);
+  }
+
+  .plan-row {
+    @apply flex items-center gap-3;
+  }
+
+  .plan-row span {
+    @apply inline-flex items-center justify-center text-sm font-bold rounded-full w-7 h-7;
+    background: linear-gradient(130deg, rgba(34, 197, 94, 0.85), rgba(56, 189, 248, 0.8));
+    color: #021522;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-navy-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-electric-500;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-electric-600;
+}
+
