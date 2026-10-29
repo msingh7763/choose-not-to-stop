@@ -14,34 +14,87 @@ const LOCAL_TASKS_KEY = 'homeDailyTasksFallback';
 
 const moodActions = [
   {
-    title: 'Track My Mood',
-    description: 'Log how you feel and turn emotions into patterns you can understand.',
-    cta: 'Open Mood Tracker',
+    title: 'Track Mood',
+    description: 'Capture your feelings in seconds and understand your emotional rhythm over time.',
+    cta: 'Start Mood Check-In',
+    secondaryCta: 'View Mood History',
+    secondaryTo: '/dashboard',
     to: '/mood',
-    color: 'from-amber-400/30 to-rose-400/20 border-amber-300/30',
+    color: 'from-[#F4DDD5] to-[#FFFFFF] border-[#8E929B]/40',
+    iconBg: 'from-[#ECB7B3] to-[#F4DDD5] border-[#8E929B]',
+    icon: 'mood',
   },
   {
-    title: 'Talk To Coach',
-    description: 'Run a guided check-in with breathing, grounding, and a mini support plan.',
-    cta: 'Start Coaching',
+    title: 'Talk to Coach',
+    description: 'Get an AI-guided check-in with breathing, grounding, and calm action planning.',
+    cta: 'Open Wellness Coach',
+    secondaryCta: 'Quick 2-Min Session',
+    secondaryTo: '/coach',
     to: '/coach',
-    color: 'from-cyan-400/30 to-blue-400/20 border-cyan-300/30',
+    color: 'from-[#DCE1DA] to-[#FFFFFF] border-[#8E929B]/40',
+    iconBg: 'from-[#A4BBAC] to-[#DCE1DA] border-[#8E929B]',
+    icon: 'coach',
   },
   {
     title: 'Write Reflection',
-    description: 'Release stress through a private journal and track sentiment over time.',
-    cta: 'Go To Journal',
+    description: 'Write a private reflection to release mental load and observe emotional shifts.',
+    cta: 'Open Journal',
+    secondaryCta: 'See Insights',
+    secondaryTo: '/insights',
     to: '/journal',
-    color: 'from-emerald-400/30 to-lime-400/20 border-emerald-300/30',
+    color: 'from-[#ECB7B3]/40 to-[#FFFFFF] border-[#8E929B]/40',
+    iconBg: 'from-[#ECB7B3] to-[#A4BBAC] border-[#8E929B]',
+    icon: 'journal',
   },
   {
     title: 'Mind Care Studio',
-    description: 'Practice thought reframing, gratitude logging, and safety planning in one place.',
-    cta: 'Open Studio',
+    description: 'Use reframing, gratitude, and safety tools in one supportive mental wellness studio.',
+    cta: 'Enter Studio',
+    secondaryCta: 'Open Support',
+    secondaryTo: '/crisis',
     to: '/mind-care',
-    color: 'from-fuchsia-400/25 to-indigo-400/20 border-fuchsia-300/30',
+    color: 'from-[#A4BBAC]/35 to-[#FFFFFF] border-[#8E929B]/40',
+    iconBg: 'from-[#A4BBAC] to-[#F4DDD5] border-[#8E929B]',
+    icon: 'mind',
   },
 ];
+
+const ActionIcon = ({ type }) => {
+  if (type === 'mood') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="w-6 h-6 text-black">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M8.5 14.5c1.2 1.3 2.3 2 3.5 2s2.3-.7 3.5-2" />
+        <circle cx="9" cy="10" r=".8" fill="currentColor" />
+        <circle cx="15" cy="10" r=".8" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (type === 'coach') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="w-6 h-6 text-black">
+        <path d="M9.5 7.5A4.5 4.5 0 1 1 18 10.3c0 1.4-.6 2.4-1.5 3.4-.7.8-1.2 1.5-1.2 2.3H11c0-1.4.8-2.5 1.7-3.4.8-.8 1.2-1.3 1.2-2.2A2 2 0 0 0 10 10" />
+        <path d="M10.5 19h4M10.8 21h3.4" />
+      </svg>
+    );
+  }
+
+  if (type === 'journal') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="w-6 h-6 text-black">
+        <path d="M6 3.5h10a2 2 0 0 1 2 2V20a.5.5 0 0 1-.8.4L14 18H6a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" />
+        <path d="M8 8h8M8 12h8" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="w-6 h-6 text-black">
+      <path d="M12 21s-6.8-4.6-6.8-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10Z" />
+    </svg>
+  );
+};
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -199,52 +252,70 @@ const Home = () => {
   };
 
   return (
-    <div className="relative space-y-8">
+    <div className="relative space-y-8 lg:space-y-10">
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed z-50 px-6 py-3 text-white transition-opacity bg-gray-800 shadow-2xl top-20 right-5 rounded-xl animate-pulse">
+        <div className="fixed z-50 px-6 py-3 font-bold text-black transition-opacity bg-[#ECB7B3] border border-[#8E929B] shadow-2xl top-20 right-5 rounded-xl">
           {toast}
         </div>
       )}
 
-      <section className="relative p-8 overflow-hidden border shadow-2xl mood-hero md:p-10 rounded-2xl border-white/20">
+      <section className="relative p-8 overflow-hidden border shadow-lg md:p-10 rounded-3xl border-[#8E929B]/40 mood-hero">
         <div className="absolute inset-0 mood-noise opacity-20"></div>
+        <div className="absolute -top-14 right-10 h-56 w-56 rounded-full bg-[#ECB7B3]/40 blur-3xl"></div>
+        <div className="absolute -bottom-20 left-8 h-64 w-64 rounded-full bg-[#A4BBAC]/40 blur-3xl"></div>
         <div className="relative z-10 max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.2em] text-white/80 mb-2">Your wellness home</p>
-          <h1 className="text-3xl font-bold leading-tight text-white md:text-5xl">
+          <p className="text-sm uppercase tracking-[0.22em] text-black font-extrabold mb-3">AI Emotional Resilience Dashboard</p>
+          <h1 className="text-3xl font-black leading-tight text-black md:text-5xl">
             {getGreeting()}, {user?.name || 'there'}.
-            <span className="block mt-2 text-emerald-100">Let us build a calmer day together.</span>
+            <span className="block mt-3 text-black">You&apos;re doing great today 💙</span>
           </h1>
-          <p className="max-w-2xl mt-5 text-base text-white/85 md:text-lg">
-            Start with one small action: a quick check-in, a short reflection, or a breathing reset.
-            Small steps done daily create real emotional resilience.
+          <p className="max-w-2xl mt-5 text-base leading-7 text-black font-semibold md:text-lg">
+            This space is designed to help you stay grounded. Start with one small action and let the platform guide you toward steadier emotional balance.
           </p>
           <div className="flex flex-wrap gap-3 mt-7">
             <Link to="/coach" className="btn-primary">Start 2-Min Coach</Link>
-            <Link to="/dashboard" className="btn-secondary">View Progress</Link>
+            <Link to="/dashboard" className="btn-secondary">View Full Dashboard</Link>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-black text-black">Your Wellness Actions</h2>
+          <p className="mt-2 text-black font-semibold">Choose one focused step and build momentum gently.</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
         {moodActions.map((action) => (
           <article
             key={action.title}
-            className={`rounded-2xl border bg-gradient-to-br ${action.color} backdrop-blur-md p-5 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1`}
+            className={`group rounded-2xl border bg-gradient-to-br ${action.color} backdrop-blur-xl p-5 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-md`}
           >
-            <h2 className="text-xl font-semibold text-white">{action.title}</h2>
-            <p className="mt-3 text-white/85 min-h-[72px]">{action.description}</p>
-            <Link to={action.to} className="inline-flex mt-4 text-sm font-semibold text-electric-200 hover:text-white">
-              {action.cta} {'>'}
-            </Link>
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="text-xl font-black text-black">{action.title}</h3>
+              <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border bg-gradient-to-br ${action.iconBg} text-black shadow-sm`}>
+                <ActionIcon type={action.icon} />
+              </div>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-black font-medium min-h-[96px]">{action.description}</p>
+            <div className="mt-5 space-y-2">
+              <Link to={action.to} className="btn-primary w-full inline-flex justify-center text-center">
+                {action.cta}
+              </Link>
+              <Link to={action.secondaryTo} className="btn-secondary w-full inline-flex justify-center text-center text-sm">
+                {action.secondaryCta}
+              </Link>
+            </div>
           </article>
         ))}
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="transition-all card mood-calm hover:shadow-2xl">
-          <h3 className="text-xl font-semibold text-white">Mood color check</h3>
-          <p className="mt-3 text-gray-200">
+        <div className="transition-all card mood-calm hover:shadow-lg">
+          <h3 className="text-xl font-black text-black">Mood color check</h3>
+          <p className="mt-3 text-black font-semibold">
             Pick the color that matches your current state and take one action.
           </p>
           <div className="grid grid-cols-2 gap-3 mt-4">
@@ -256,35 +327,35 @@ const Home = () => {
         </div>
 
         <div className="card mood-warm">
-          <h3 className="flex items-center justify-between text-xl font-semibold text-white">
+          <h3 className="flex items-center justify-between text-xl font-black text-black">
             Today&apos;s Plan
-            {tasks.length > 0 && <span className="px-3 py-1 text-sm font-normal rounded-full bg-white/20">{tasks.filter(t => t.completed).length}/{tasks.length} Completed</span>}
+            {tasks.length > 0 && <span className="px-3 py-1 text-sm font-bold rounded-full bg-[#DCE1DA] border border-[#8E929B] text-black">{tasks.filter(t => t.completed).length}/{tasks.length} Completed</span>}
           </h3>
           {taskError && (
-            <div className="flex items-center justify-between gap-3 px-3 py-2 mt-3 text-sm border rounded-lg border-amber-200/40 bg-amber-300/10 text-amber-100">
+            <div className="flex items-center justify-between gap-3 px-3 py-2 mt-3 text-sm border rounded-lg border-[#8E929B] bg-[#ECB7B3]/30 text-black font-semibold">
               <span>{taskError}</span>
-              <button onClick={fetchTasks} className="px-2 py-1 text-xs transition-colors rounded bg-white/20 hover:bg-white/30" type="button">
+              <button onClick={fetchTasks} className="px-2 py-1 text-xs font-bold transition-colors rounded bg-white border border-[#8E929B] hover:bg-[#F4DDD5] text-black" type="button">
                 Retry
               </button>
             </div>
           )}
-          <ul className="mt-4 space-y-3 text-gray-100">
+          <ul className="mt-4 space-y-3 text-black">
             {loadingTasks ? (
-              <div className="space-y-3 text-gray-200 animate-pulse opacity-60">
-                <div className="h-6 w-[80%] bg-white/20 rounded"></div>
-                <div className="h-6 w-[70%] bg-white/20 rounded"></div>
-                <div className="h-6 w-[90%] bg-white/20 rounded"></div>
+              <div className="space-y-3 text-black animate-pulse opacity-60">
+                <div className="h-6 w-[80%] bg-[#8E929B]/20 rounded"></div>
+                <div className="h-6 w-[70%] bg-[#8E929B]/20 rounded"></div>
+                <div className="h-6 w-[90%] bg-[#8E929B]/20 rounded"></div>
               </div>
             ) : tasks.length > 0 ? (
               tasks.map((task) => (
                 <li key={task.id}>
                   <button
                     onClick={() => toggleTask(task.id)}
-                    className={`w-full text-left plan-row cursor-pointer flex items-center gap-3 p-2 rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed ${task.completed ? 'bg-white/10 opacity-70 line-through' : 'hover:bg-white/5'}`}
+                    className={`w-full text-left plan-row cursor-pointer flex items-center gap-3 p-2 rounded-lg transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed ${task.completed ? 'bg-[#DCE1DA]/70 line-through text-black' : 'hover:bg-[#F4DDD5]/60 text-black'}`}
                     type="button"
                     disabled={Boolean(syncingTaskId)}
                   >
-                    <span className={`w-6 h-6 flex items-center justify-center rounded-full border border-white/40 text-xs ${task.completed ? 'bg-white/30 text-white' : ''}`}>
+                    <span className={`w-6 h-6 flex items-center justify-center rounded-full border border-[#8E929B] text-xs font-bold ${task.completed ? 'bg-[#A4BBAC] text-black' : 'bg-white text-black'}`}>
                       {syncingTaskId === task.id ? '...' : task.completed ? '✓' : task.id}
                     </span>
                     {task.title}
@@ -292,7 +363,7 @@ const Home = () => {
                 </li>
               ))
             ) : (
-             <p className="mt-2 text-sm opacity-80">No tasks generated for today.</p>
+              <p className="mt-2 text-sm font-semibold text-black">No tasks generated for today.</p>
             )}
           </ul>
         </div>

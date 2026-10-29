@@ -27,10 +27,10 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-navy-900 text-gray-100">
-          <div className="glass-strong max-w-lg w-full p-8 text-center">
-            <h1 className="text-2xl font-bold text-white mb-3">Something went wrong</h1>
-            <p className="text-gray-300 mb-6">
+        <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#DCE1DA] via-[#F4DDD5] to-[#DCE1DA] text-black">
+          <div className="glass-strong max-w-lg w-full p-8 text-center border border-[#A4BBAC]">
+            <h1 className="text-2xl font-black text-black mb-3">Something went wrong</h1>
+            <p className="text-black font-semibold mb-6">
               We logged this issue. Please refresh the page and try again.
             </p>
             <button

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { riskAPI } from './services/api';
 
 const RiskDashboard = () => {
@@ -49,7 +49,6 @@ const RiskDashboard = () => {
         setError(mergedError || 'Unable to load complete risk insights right now.');
       }
 
-      // Keep dashboard useful even when live prediction fails by reusing latest saved score.
       if (
         evaluateResult.status === 'rejected'
         && historyResult.status === 'fulfilled'
@@ -75,111 +74,120 @@ const RiskDashboard = () => {
   }, []);
 
   const getBadgeStyle = (risk) => {
-    switch(risk) {
-      case 'SAFE': return 'bg-green-100 text-green-800 border-green-300';
-      case 'WARNING': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'CRITICAL': return 'bg-red-100 text-red-800 border-red-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+    switch (risk) {
+      case 'SAFE':
+        return 'bg-[#A4BBAC]/35 text-black border-[#A4BBAC]';
+      case 'WARNING':
+        return 'bg-[#ECB7B3]/45 text-black border-[#8E929B]';
+      case 'CRITICAL':
+        return 'bg-red-100 text-red-700 border-red-500';
+      default:
+        return 'bg-[#DCE1DA] text-black border-[#8E929B]';
     }
   };
 
   const getRecommendations = (risk) => {
     if (risk === 'CRITICAL') {
       return (
-        <div className="bg-red-50 p-4 rounded-xl border border-red-200 mt-4">
-          <h4 className="font-bold text-red-700">🚨 Immediate Action Recommended</h4>
-          <ul className="list-disc pl-5 mt-2 text-red-600">
+        <div className="bg-red-50 p-4 rounded-xl border border-red-300 mt-4 text-black">
+          <h4 className="font-black text-red-700">Immediate Action Recommended</h4>
+          <ul className="list-disc pl-5 mt-2 space-y-1 font-semibold text-sm">
             <li>Please reach out to a professional counselor or therapist.</li>
             <li>Call the national mental health hotline.</li>
-            <li>Connect with your trusted friends or family.</li>
+            <li>Connect with trusted friends or family.</li>
           </ul>
         </div>
       );
     }
     if (risk === 'WARNING') {
       return (
-        <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 mt-4">
-          <h4 className="font-bold text-yellow-700">⚠️ Suggestions for Improvement</h4>
-          <ul className="list-disc pl-5 mt-2 text-yellow-700">
-            <li>Try to establish a consistent sleep schedule of 7-8 hours.</li>
-            <li>Take 10 minutes for mindful breathing exercises.</li>
-            <li>Engage in journaling to process these negative emotions.</li>
+        <div className="bg-[#F4DDD5]/60 p-4 rounded-xl border border-[#8E929B] mt-4 text-black">
+          <h4 className="font-bold text-black">Early Support Recommended</h4>
+          <ul className="list-disc pl-5 mt-2 space-y-1 font-medium text-sm">
+            <li>Take extra time for self-care and rest today.</li>
+            <li>Try guided breathing or journal in the Wellness Coach.</li>
+            <li>Reach out to someone you trust if feelings linger.</li>
           </ul>
         </div>
       );
     }
-    return null;
+    return (
+      <div className="bg-[#A4BBAC]/25 p-4 rounded-xl border border-[#A4BBAC] mt-4 text-black">
+        <h4 className="font-bold text-black">Healthy Baseline Detected</h4>
+        <p className="mt-1 font-medium text-sm">Your recent signals indicate emotional stability. Keep up your healthy routines.</p>
+      </div>
+    );
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Loading Early Warning System...</div>;
+    return (
+      <div className="p-6 rounded-2xl border border-[#8E929B]/40 bg-white/80 animate-pulse text-black">
+        <div className="h-6 w-1/3 bg-[#8E929B]/20 rounded mb-4"></div>
+        <div className="h-16 bg-[#8E929B]/10 rounded"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg w-full max-w-4xl mx-auto border border-gray-100 font-sans">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Mental Health Risk Detection (Early Warning System)</h2>
-
-      {error && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-          <div className="flex items-center justify-between gap-3">
-            <span>{error}</span>
-            <button
-              type="button"
-              onClick={loadRiskData}
-              className="rounded-md border border-red-300 bg-white px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-100"
-            >
-              Retry
-            </button>
-          </div>
+    <div className="p-6 md:p-8 rounded-2xl border border-[#8E929B]/40 bg-white/85 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h3 className="text-xl font-black text-black">Early Warning Risk Detection</h3>
+          <p className="text-sm text-black font-medium">ML-driven evaluation of emotional and behavioral stability</p>
         </div>
-      )}
-      
+        {error && (
+          <button
+            type="button"
+            onClick={loadRiskData}
+            className="btn-secondary text-xs px-3 py-1.5"
+          >
+            Retry
+          </button>
+        )}
+      </div>
+
       {riskData ? (
-        <div className="mb-8">
-          <div className={`p-5 rounded-xl border-l-8 ${getBadgeStyle(riskData.risk)} flex items-center justify-between`}>
+        <div>
+          <div className={`p-4 rounded-xl border-l-4 ${getBadgeStyle(riskData.risk)} flex flex-wrap items-center justify-between gap-4`}>
             <div>
-              <p className="text-sm uppercase font-bold tracking-wider mb-1 opacity-80">Current Status</p>
-              <h3 className="text-3xl font-black">{riskData.risk}</h3>
+              <p className="text-xs uppercase font-bold tracking-wider opacity-75">Current Risk Status</p>
+              <h4 className="text-2xl font-black">{riskData.risk}</h4>
             </div>
-            <div className="text-right">
-              <p className="text-sm font-semibold opacity-80">Algorithm Reason</p>
-              <p className="text-lg italic mt-1 font-medium">{riskData.reason}</p>
+            <div className="text-right max-w-md">
+              <p className="text-xs font-bold uppercase tracking-wider opacity-75">Evaluation Reason</p>
+              <p className="text-sm font-semibold italic mt-0.5">{riskData.reason}</p>
             </div>
           </div>
 
           {getRecommendations(riskData.risk)}
         </div>
       ) : (
-        <div className="p-4 bg-gray-50 rounded-xl mb-8">
-          <p className="text-gray-500">Not enough data to calculate risk yet. Add mood entries and journal entries for a few days.</p>
+        <div className="p-4 bg-[#DCE1DA]/50 rounded-xl border border-[#8E929B]/40">
+          <p className="text-black font-semibold text-sm">Not enough data to calculate risk yet. Add mood and journal entries for a few days.</p>
         </div>
       )}
 
-      <div className="mt-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">Risk Level Trend (Last 7 Days)</h3>
-        {history.length > 0 ? (
-          <div className="h-64 bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
+      {history.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-[#8E929B]/30">
+          <h4 className="text-base font-bold text-black mb-3">Risk Trend (Last 7 Days)</h4>
+          <div className="h-56 bg-white/60 p-3 rounded-xl border border-[#8E929B]/30">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={history}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-                <XAxis dataKey="date" />
-                <YAxis dataKey="riskScale" domain={[0, 4]} ticks={[1, 2, 3]} tickFormatter={(val) => {
+                <CartesianGrid strokeDasharray="3 3" stroke="#8E929B" opacity={0.3} />
+                <XAxis dataKey="date" stroke="#000000" fontSize={12} />
+                <YAxis dataKey="riskScale" domain={[0, 4]} ticks={[1, 2, 3]} stroke="#000000" fontSize={12} tickFormatter={(val) => {
                   if (val === 1) return 'SAFE';
                   if (val === 2) return 'WARNING';
                   if (val === 3) return 'CRITICAL';
                   return '';
                 }} />
                 <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="riskScale" stroke="#6366f1" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} name="Risk Level" />
+                <Line type="monotone" dataKey="riskScale" stroke="#ECB7B3" strokeWidth={3} dot={{ r: 5, fill: '#8E929B' }} activeDot={{ r: 7 }} name="Risk Level" />
               </LineChart>
             </ResponsiveContainer>
           </div>
-        ) : (
-          <p className="text-gray-500">No historical data available to show trends.</p>
-        )}
-      </div>
-
+        </div>
+      )}
     </div>
   );
 };

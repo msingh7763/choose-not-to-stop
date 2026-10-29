@@ -51,6 +51,34 @@ export const authLoginValidation = [
   body('password').isString().withMessage('Password is required').notEmpty(),
 ];
 
+export const authForgotPasswordValidation = [
+  body('email')
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+];
+
+export const authResetPasswordValidation = [
+  param('token')
+    .isString()
+    .withMessage('Reset token is required')
+    .notEmpty(),
+  body('password')
+    .isString()
+    .withMessage('Password is required')
+    .isLength({ min: 10, max: 128 })
+    .withMessage('Password must be at least 10 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/)
+    .withMessage('Password must include uppercase, lowercase, number, and special character'),
+];
+
+export const authResendVerificationValidation = [
+  body('email')
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+];
+
 export const moodCreateValidation = [
   body('mood')
     .isIn(MOOD_VALUES)

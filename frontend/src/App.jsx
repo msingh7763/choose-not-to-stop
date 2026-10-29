@@ -9,6 +9,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Pages
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const LinkSent = lazy(() => import('./pages/LinkSent'));
 const Home = lazy(() => import('./pages/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const MoodTracking = lazy(() => import('./pages/MoodTracking'));
@@ -52,6 +56,38 @@ function App() {
                   element={
                     <PublicRoute>
                       <Register />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <PublicRoute>
+                      <ForgotPassword />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/reset-password/:token"
+                  element={
+                    <PublicRoute>
+                      <ResetPassword />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/verify-email/:token"
+                  element={
+                    <PublicRoute>
+                      <VerifyEmail />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/link-sent"
+                  element={
+                    <PublicRoute>
+                      <LinkSent />
                     </PublicRoute>
                   }
                 />

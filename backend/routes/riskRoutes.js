@@ -6,7 +6,7 @@ import MoodEntry from '../models/MoodEntry.js';
 import JournalEntry from '../models/JournalEntry.js';
 
 const router = express.Router();
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
 const parsedTimeoutMs = Number(process.env.ML_REQUEST_TIMEOUT_MS);
 const ML_REQUEST_TIMEOUT_MS = Number.isFinite(parsedTimeoutMs) && parsedTimeoutMs > 0
   ? parsedTimeoutMs

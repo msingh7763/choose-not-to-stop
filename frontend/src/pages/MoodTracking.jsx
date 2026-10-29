@@ -12,11 +12,11 @@ const MoodTracking = () => {
   const [messageType, setMessageType] = useState('info');
 
   const moods = [
-    { value: 'Happy', emoji: '😊', color: 'from-green-400 to-green-600' },
-    { value: 'Neutral', emoji: '😐', color: 'from-gray-400 to-gray-600' },
-    { value: 'Sad', emoji: '😢', color: 'from-blue-400 to-blue-600' },
-    { value: 'Anxious', emoji: '😰', color: 'from-yellow-400 to-yellow-600' },
-    { value: 'Stressed', emoji: '😤', color: 'from-red-400 to-red-600' },
+    { value: 'Happy', emoji: '😊', color: 'from-[#A4BBAC] to-[#ECB7B3]' },
+    { value: 'Neutral', emoji: '😐', color: 'from-[#DCE1DA] to-[#8E929B]' },
+    { value: 'Sad', emoji: '😢', color: 'from-[#8E929B] to-[#DCE1DA]' },
+    { value: 'Anxious', emoji: '😰', color: 'from-[#ECB7B3] to-[#F4DDD5]' },
+    { value: 'Stressed', emoji: '😤', color: 'from-[#F4DDD5] to-[#ECB7B3]' },
   ];
 
   const moodScores = {
@@ -79,22 +79,14 @@ const MoodTracking = () => {
     try {
       await moodAPI.create({
         mood,
-        sleepHours: sleepHours ? parseInt(sleepHours) : null,
-        notes: notes.trim(),
+        sleepHours: sleepHours ? parseFloat(sleepHours) : undefined,
+        notes,
       });
 
-      setMessage(todayEntry
-        ? 'Mood entry updated. Tracking regularly helps identify emotional patterns early.'
-        : 'Mood entry saved. Daily check-ins build self-awareness and better support decisions.');
+      setMessage('Mood entry saved successfully!');
       setMessageType('success');
       loadTodayEntry();
       loadRecentEntries();
-
-      // Clear form if new entry
-      if (!todayEntry) {
-        setSleepHours('');
-        setNotes('');
-      }
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error saving mood entry');
       setMessageType('error');
@@ -104,17 +96,17 @@ const MoodTracking = () => {
   };
 
   const getSevenDayAverage = () => {
-    const window = recentEntries.slice(0, 7);
-    if (!window.length) return '0.00';
-    const total = window.reduce((sum, entry) => sum + (moodScores[entry.mood] || 3), 0);
-    return (total / window.length).toFixed(2);
+    if (!recentEntries.length) return '0.0';
+    const total = recentEntries.reduce((sum, entry) => sum + (moodScores[entry.mood] || 3), 0);
+    return (total / recentEntries.length).toFixed(1);
   };
 
   const getTrendLabel = () => {
-    if (recentEntries.length < 4) return 'Not enough data yet';
+    if (recentEntries.length < 2) return 'Stable';
     const recent = recentEntries.slice(0, 3);
-    const previous = recentEntries.slice(3, 6);
-    if (!previous.length) return 'Not enough data yet';
+    const previous = recentEntries.slice(3, 7);
+
+    if (!previous.length) return 'Stable';
 
     const recentAvg = recent.reduce((sum, entry) => sum + (moodScores[entry.mood] || 3), 0) / recent.length;
     const previousAvg = previous.reduce((sum, entry) => sum + (moodScores[entry.mood] || 3), 0) / previous.length;
@@ -147,32 +139,30 @@ const MoodTracking = () => {
 
   return (
     <div className="space-y-6">
-      <header className="relative p-6 overflow-hidden border rounded-3xl border-slate-700/70 bg-gradient-to-br from-slate-900/80 to-slate-950/70 md:p-8">
-        <div className="absolute top-0 w-40 h-40 rounded-full -left-20 bg-emerald-500/15 blur-3xl"></div>
-        <div className="absolute bottom-0 w-48 h-48 rounded-full -right-16 bg-cyan-500/15 blur-3xl"></div>
-        <div className="relative z-10">
-          <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Daily Emotional Check-in</p>
-          <h1 className="mt-2 text-3xl font-bold text-white md:text-4xl">Mood Tracking</h1>
-          <p className="max-w-2xl mt-2 text-slate-300">
-            A 60-second check-in to understand your emotional direction, sleep impact, and support needs.
-          </p>
-        </div>
-      </header>
+      {/* Heading only (card removed, dark yellow text) */}
+      <div>
+        <h1
+          className="text-3xl md:text-5xl font-black text-dark-yellow tracking-tight"
+          style={{ color: '#b45309', fontFamily: 'Poppins, Inter, sans-serif' }}
+        >
+          Mood Tracking
+        </h1>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Mood Selection Form */}
-        <div className="p-6 border lg:col-span-2 rounded-3xl border-slate-700/70 bg-slate-900/75 md:p-8">
-          <h2 className="mb-2 text-xl font-semibold text-white">
+        <div className="p-6 border lg:col-span-2 rounded-2xl border-[#8E929B]/40 bg-white/85 md:p-8 shadow-sm">
+          <h2 className="mb-2 text-xl font-black text-black">
             {todayEntry ? 'Update Today\'s Mood' : 'How are you feeling today?'}
           </h2>
-          <p className="mb-6 text-sm text-slate-300">
+          <p className="mb-6 text-sm text-black font-semibold">
             Track your feeling, sleep, and note context so the app can provide better prediction and support.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Mood Selection */}
             <div>
-              <label className="block mb-3 text-sm font-medium text-slate-300">
+              <label className="block mb-3 text-sm font-bold text-black">
                 Step 1: Select your mood
               </label>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
@@ -181,25 +171,25 @@ const MoodTracking = () => {
                     key={m.value}
                     type="button"
                     onClick={() => setMood(m.value)}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all font-bold ${
                       mood === m.value
-                        ? `border-emerald-300 bg-gradient-to-br ${m.color} scale-[1.02] text-white`
-                        : 'border-slate-700 bg-slate-950/40 hover:border-slate-500 text-slate-200'
+                        ? 'border-black bg-[#ECB7B3] scale-[1.03] text-black shadow-sm'
+                        : 'border-[#8E929B]/50 bg-[#DCE1DA]/60 hover:bg-[#F4DDD5] text-black'
                     }`}
                   >
                     <div className="mb-2 text-3xl">{m.emoji}</div>
-                    <div className="text-sm font-medium">{m.value}</div>
+                    <div className="text-sm font-bold text-black">{m.value}</div>
                   </button>
                 ))}
               </div>
-              <p className="p-3 mt-3 text-sm border rounded-xl border-slate-700 bg-slate-950/40 text-slate-300">
+              <p className="p-3 mt-3 text-sm border rounded-xl border-[#8E929B]/40 bg-[#DCE1DA]/45 text-black font-semibold">
                 {selectedMoodSupport}
               </p>
             </div>
 
             {/* Sleep Hours */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-300">
+              <label className="block mb-2 text-sm font-bold text-black">
                 Step 2: Sleep Hours (optional)
               </label>
               <input
@@ -209,33 +199,33 @@ const MoodTracking = () => {
                 step="0.5"
                 value={sleepHours}
                 onChange={(e) => setSleepHours(e.target.value)}
-                className="input-field"
+                className="input-field text-black font-semibold"
                 placeholder="e.g., 7.5"
               />
-              <p className="mt-2 text-xs text-slate-400">
+              <p className="mt-2 text-xs text-black font-medium">
                 Sleep is one of the strongest emotional stability signals in your prediction model.
               </p>
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-300">
+              <label className="block mb-2 text-sm font-bold text-black">
                 Step 3: Notes (optional)
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows="4"
-                className="input-field"
+                className="input-field text-black font-medium"
                 placeholder="How are you feeling? What's on your mind?"
                 maxLength={500}
               />
-              <p className="mt-1 text-xs text-slate-400">{notes.length}/500</p>
+              <p className="mt-1 text-xs text-black font-medium">{notes.length}/500</p>
             </div>
 
-            <div className="p-4 border rounded-xl border-emerald-700/40 bg-emerald-500/10">
-              <p className="text-sm font-semibold text-emerald-200">How this helps you</p>
-              <p className="mt-1 text-sm text-slate-200">
+            <div className="p-4 border rounded-xl border-[#A4BBAC] bg-[#A4BBAC]/25">
+              <p className="text-sm font-bold text-black">How this helps you</p>
+              <p className="mt-1 text-sm text-black font-medium">
                 Consistent mood logging helps detect emotional decline early, improves risk prediction quality,
                 and gives you support recommendations that match your real pattern.
               </p>
@@ -243,17 +233,21 @@ const MoodTracking = () => {
 
             {message && (
               <div
-                className={`p-3 rounded-lg ${
+                className={`p-3 rounded-lg font-semibold text-sm ${
                   messageType === 'error'
-                    ? 'bg-red-500/20 text-red-200 border border-red-500/30'
-                    : 'bg-green-500/20 text-green-200 border border-green-500/30'
+                    ? 'bg-[#ECB7B3]/40 text-black border border-red-400'
+                    : 'bg-[#A4BBAC]/40 text-black border border-[#A4BBAC]'
                 }`}
               >
                 {message}
               </div>
             )}
 
-            <button type="submit" disabled={loading} className="w-full px-4 py-3 font-semibold transition-colors rounded-xl bg-emerald-400 text-slate-950 hover:bg-emerald-300 disabled:opacity-70 disabled:cursor-not-allowed">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-primary text-center font-bold"
+            >
               {loading ? 'Saving...' : todayEntry ? 'Update Entry' : 'Save Entry'}
             </button>
           </form>
@@ -261,26 +255,26 @@ const MoodTracking = () => {
 
         {/* Insight Sidebar */}
         <div className="space-y-6">
-          <div className="p-5 border rounded-3xl border-slate-700/70 bg-slate-900/75">
-            <h2 className="text-lg font-semibold text-white">Check-in Insights</h2>
+          <div className="p-5 border rounded-2xl border-[#8E929B]/40 bg-white/85 shadow-sm">
+            <h2 className="text-lg font-black text-black">Check-in Insights</h2>
             <div className="mt-4 space-y-3">
-              <div className="p-3 border rounded-xl border-slate-700 bg-slate-950/50">
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">7 Day Average</p>
-                <p className="mt-2 text-2xl font-bold text-cyan-300">{getSevenDayAverage()}/5</p>
+              <div className="p-3 border rounded-xl border-[#8E929B]/30 bg-[#DCE1DA]/60">
+                <p className="text-xs uppercase tracking-[0.16em] text-black font-bold">7 Day Average</p>
+                <p className="mt-2 text-2xl font-black text-black">{getSevenDayAverage()}/5</p>
               </div>
-              <div className="p-3 border rounded-xl border-slate-700 bg-slate-950/50">
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Trend</p>
-                <p className="mt-2 text-lg font-semibold text-emerald-300">{getTrendLabel()}</p>
+              <div className="p-3 border rounded-xl border-[#8E929B]/30 bg-[#DCE1DA]/60">
+                <p className="text-xs uppercase tracking-[0.16em] text-black font-bold">Trend</p>
+                <p className="mt-2 text-lg font-black text-black">{getTrendLabel()}</p>
               </div>
-              <div className="p-3 border rounded-xl border-slate-700 bg-slate-950/50">
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Check-in Streak</p>
-                <p className="mt-2 text-lg font-semibold text-white">{getCheckInStreak()} day(s)</p>
+              <div className="p-3 border rounded-xl border-[#8E929B]/30 bg-[#DCE1DA]/60">
+                <p className="text-xs uppercase tracking-[0.16em] text-black font-bold">Check-in Streak</p>
+                <p className="mt-2 text-lg font-black text-black">{getCheckInStreak()} day(s)</p>
               </div>
             </div>
           </div>
 
-          <div className="p-5 border rounded-3xl border-slate-700/70 bg-slate-900/75">
-            <h2 className="mb-4 text-lg font-semibold text-white">Recent Entries</h2>
+          <div className="p-5 border rounded-2xl border-[#8E929B]/40 bg-white/85 shadow-sm">
+            <h2 className="mb-4 text-lg font-black text-black">Recent Entries</h2>
             <div className="space-y-3">
             {recentEntries.length > 0 ? (
               recentEntries.map((entry) => {
@@ -288,22 +282,22 @@ const MoodTracking = () => {
                 return (
                   <div
                     key={entry._id}
-                    className="p-3 border rounded-lg bg-slate-950/50 border-slate-700"
+                    className="p-3 border rounded-xl bg-[#DCE1DA]/50 border-[#8E929B]/30"
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-1">
                       <span className="text-2xl">{moodObj?.emoji}</span>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-black font-bold">
                         {new Date(entry.date).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                         })}
                       </span>
                     </div>
-                    <div className="mb-1 text-sm font-medium text-slate-200">
+                    <div className="mb-0.5 text-sm font-bold text-black">
                       {entry.mood}
                     </div>
                     {entry.sleepHours && (
-                      <div className="text-xs text-slate-400">
+                      <div className="text-xs text-black font-semibold">
                         💤 {entry.sleepHours} hours
                       </div>
                     )}
@@ -311,7 +305,7 @@ const MoodTracking = () => {
                 );
               })
             ) : (
-              <p className="py-4 text-center text-slate-400">No entries yet</p>
+              <p className="py-4 text-center text-black font-semibold text-sm">No entries yet</p>
             )}
             </div>
           </div>
@@ -322,4 +316,3 @@ const MoodTracking = () => {
 };
 
 export default MoodTracking;
-

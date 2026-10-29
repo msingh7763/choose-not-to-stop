@@ -30,6 +30,13 @@ AI-powered Emotional Resilience Platform - Backend Server
    FRONTEND_URL=http://localhost:5173
    ML_SERVICE_URL=http://localhost:8000
    ML_REQUEST_TIMEOUT_MS=5000
+   APP_NAME=Choose Not To Stop
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_SECURE=false
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASS=your-app-password
+   SMTP_FROM=Choose Not To Stop <your-email@gmail.com>
    ```
 
 3. **Start MongoDB:**
@@ -104,6 +111,8 @@ backend/
 
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
+- `POST /api/auth/forgot-password` - Request reset email
+- `POST /api/auth/reset-password/:token` - Set new password with reset token
 - `GET /api/auth/me` - Get current user (Protected)
 
 ### Mood Tracking

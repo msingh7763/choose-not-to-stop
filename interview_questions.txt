@@ -1,0 +1,151 @@
+Choose Not To Stop - Interview Questions and Explanations
+
+1. What is the main purpose of this project?
+Explanation: This is an AI-powered emotional resilience platform. It helps users track mood, write journal entries, review insights, calculate resilience scores, and assess early warning risk. In an interview, explain that the app combines user wellness tracking with analytics, security, and an ML-based risk evaluation feature.
+
+2. What problem does the project solve for users?
+Explanation: The project helps users understand emotional patterns over time instead of just storing raw entries. It turns daily mood and journal data into actionable insights, resilience metrics, and risk signals, which can support self-awareness and early intervention.
+
+3. How is the project structured at a high level?
+Explanation: The app is split into three parts: a Node.js and Express backend, a React frontend, and a Python FastAPI ML service. The backend handles authentication, mood/journal APIs, insights, resilience, anonymous wall, and risk evaluation. The frontend provides the user interface. The Python service handles risk prediction.
+
+4. Why did you separate the backend and ML service?
+Explanation: Separation keeps the core API lightweight and allows the ML model to be developed, trained, and deployed independently. It also improves maintainability because the prediction logic can evolve without rewriting the main Node.js app.
+
+5. How does authentication work in this project?
+Explanation: Authentication uses JWT tokens. Users register, verify their email, log in, and then receive a token that is stored on the frontend. Protected routes check that token before allowing access. This is a common interview topic because it shows session control and API protection.
+
+6. Why is email verification implemented?
+Explanation: Email verification reduces fake signups and ensures the account owner controls the email address. The backend blocks login until the email is verified, which improves security and trust.
+
+7. What happens when a user registers?
+Explanation: The backend validates the request, checks whether the email already exists, creates the user, generates an email verification token, stores it securely, and sends a verification link. In interviews, mention that this is a good example of defensive backend design.
+
+8. How is password reset handled?
+Explanation: The app generates a time-limited reset token, stores a hashed version in the database, sends the reset link by email, and allows the user to set a new password using that token. This is safer than sending raw passwords or permanent links.
+
+9. What validation rules are applied to user input?
+Explanation: The backend uses request validation middleware to check registration, login, password reset, and other forms. One important rule is the strong password policy: minimum length and a mix of uppercase, lowercase, number, and special character. This prevents weak credentials and reduces invalid requests.
+
+10. Why is validation handled on both frontend and backend?
+Explanation: Frontend validation improves user experience, but backend validation is still required because frontend checks can be bypassed. The backend must be the final authority to keep the system secure and reliable.
+
+11. How is route protection implemented?
+Explanation: Protected API routes use middleware that verifies the JWT and attaches the user to the request. On the frontend, route guards ensure only logged-in users can access private pages. This dual protection prevents unauthorized access both in the UI and on the server.
+
+12. What security measures are used in the backend?
+Explanation: The backend uses Helmet for HTTP headers, CORS allowlisting, rate limiting, request size limits, and input validation. These reduce common attack surfaces such as abuse, large payload attacks, and unsafe cross-origin requests.
+
+13. Why is rate limiting important here?
+Explanation: Rate limiting protects sensitive endpoints like authentication and anonymous posting from brute-force attacks and spam. It also keeps the API more stable under heavy or abusive traffic.
+
+14. What is the role of observability in this project?
+Explanation: The backend attaches request IDs and logs requests in a structured way. It also exposes telemetry endpoints for frontend errors and web vitals. In an interview, say this helps correlate issues across frontend and backend and makes debugging easier.
+
+15. What are the main data domains in the app?
+Explanation: The app stores users, mood entries, journal entries, resilience scores, daily logs, anonymous posts, risk history, and daily tasks. Each domain supports a specific product feature and keeps the data model organized.
+
+16. Why did you use MongoDB and Mongoose?
+Explanation: MongoDB fits this kind of flexible wellness data well because records can vary in shape and volume. Mongoose helps with schema structure, validation, and model methods. This is useful for storing user-generated content like moods, journals, and AI results.
+
+17. How does mood tracking work?
+Explanation: Users can log a daily mood along with sleep hours and notes. The system supports analytics like mood history, streaks, and risk scoring. Interviewers may ask about how you avoid duplicate entries and how you calculate trends.
+
+18. How does journal tracking add value beyond mood tracking?
+Explanation: Journal entries capture richer text context, which can be sentiment analyzed. This gives deeper behavioral insight than mood labels alone. It also feeds the insights engine, resilience scoring, and risk prediction features.
+
+19. What does the insights engine do?
+Explanation: The insights layer looks for patterns such as streaks, mood drops, sentiment trends, and recurring signals over time. Its purpose is to convert raw logs into human-readable feedback that helps users understand changes in behavior.
+
+20. How is the resilience score calculated?
+Explanation: The resilience score combines multiple signals such as mood consistency, sentiment, coping actions, and weekly trends. A score like this is interview-friendly because it shows how you transformed application data into a measurable wellness indicator.
+
+21. Why is a fallback used for resilience or risk-related features?
+Explanation: Fallback logic makes the system more reliable when data is incomplete or an external service is down. Instead of failing completely, the app can still provide a reasonable response. That is a strong production-minded design choice.
+
+22. How does the risk evaluation feature work?
+Explanation: The backend gathers recent mood and journal signals, transforms them into features, and sends them to the Python ML service. If that service is unavailable, the backend uses a deterministic heuristic fallback so the feature still works.
+
+23. Why did you use a heuristic fallback for risk prediction?
+Explanation: The fallback keeps the user experience available even if the ML service fails. It also makes the system more resilient during deployment, local development, or network issues. This is a good interview point because it shows graceful degradation.
+
+24. How does prediction work in this project?
+Explanation: The backend first collects recent mood and journal data, converts it into numeric features like sentiment, sleep, mood, and negative keyword count, and then sends those features to the Python ML service. The Python service runs the trained model and returns a risk label such as SAFE, WARNING, or CRITICAL, plus a readable reason. If the ML service is unavailable, the backend uses a deterministic heuristic fallback so prediction still works.
+
+25. Why is explainability important in the ML output?
+Explanation: In a wellness or support tool, users and developers need to understand why a risk label was generated. The reason text builds trust and makes the prediction more useful and safer to act on.
+
+26. What features are used for ML prediction?
+Explanation: The model uses sentiment, sleep, mood, and negative keyword count. These are straightforward behavioral features that can be derived from app usage and journal content.
+
+27. How did you train the ML model?
+Explanation: The training script uses a structured dataset, splits it into train and test sets, trains a RandomForest model, evaluates it, and saves the final artifact with joblib. Interviewers may ask why RandomForest was chosen, so explain that it is simple, robust, and easy to deploy.
+
+28. How does the frontend manage auth state?
+Explanation: The frontend stores token and user data in localStorage, then verifies the session by calling the current-user endpoint on mount. This allows the app to persist login state across refreshes while still validating the session with the backend.
+
+29. Why did you use lazy loading and Suspense in the frontend?
+Explanation: Lazy loading reduces the initial JavaScript bundle size and improves perceived performance. Suspense provides a clean fallback while route components are loading. This is a good performance-focused interview answer.
+
+30. How are protected and public routes handled in React?
+Explanation: Public routes are meant for login, registration, and password flows, while protected routes require an authenticated user. This separation keeps the navigation logic clean and avoids exposing private pages to anonymous users.
+
+31. What happens on the dashboard page?
+Explanation: The dashboard loads mood data, journal data, resilience data, insights, and risk predictions. It also shows charts and summaries. Interviewers may ask how you handle partial failure, so mention that the dashboard uses fallback behavior and promise handling to keep working even if one endpoint fails.
+
+32. Why did you include charts on the dashboard?
+Explanation: Charts help users visually understand emotional trends instead of reading raw tables. They make the analytics feature more understandable and more persuasive in the product experience.
+
+33. What is the purpose of the anonymous wall?
+Explanation: The anonymous wall lets users share supportive posts without revealing identity. This can reduce pressure and encourage openness. It also includes moderation and retention behavior, which is a practical product design point.
+
+34. What is the purpose of the wellness coach and mind care tools?
+Explanation: These features provide guided support such as breathing exercises, grounding steps, reframing, gratitude, and safety planning. They turn the app from a tracking tool into an active support platform.
+
+35. How does the app support crisis handling?
+Explanation: Crisis mode is triggered from recent negative signals and offers immediate support content like guided breathing and emergency resources. In an interview, emphasize that this feature is designed for responsible user support rather than only analytics.
+
+36. How did you approach testing?
+Explanation: The project includes backend Jest unit tests and integration tests. This is important because it shows the logic for scoring and health checks is verified, not just manually tested in the browser.
+
+37. What kinds of tests are most valuable in this project?
+Explanation: Good tests here include validation tests, auth flow tests, risk/resilience calculation tests, and health endpoint tests. These cover the most business-critical paths and reduce regression risk.
+
+38. How would you explain the main technical challenge in this project?
+Explanation: The hardest part is integrating multiple layers reliably: user auth, wellness data collection, analytics, and an external ML service. The design handles this with modular services, validation, fallback logic, and frontend route/state management.
+
+39. If you were improving this project further, what would you do next?
+Explanation: Good answers include adding deeper analytics, improving ML explainability, expanding automated tests, adding background jobs for scheduled summaries, and strengthening monitoring. This shows that you can think beyond the current implementation.
+
+40. Why is this project good for an interview portfolio?
+Explanation: It demonstrates full-stack architecture, authentication, secure API design, real-time user experience, analytics, ML integration, fallback handling, and testing. That combination shows practical engineering ability across frontend, backend, and data-driven features.
+
+41. How do the backend and frontend communicate in this project?
+Explanation: The frontend calls REST API endpoints through a central API service, and the backend responds with JSON. This keeps the integration predictable, makes errors easier to handle, and separates UI logic from server logic.
+
+42. Why is a centralized API service useful on the frontend?
+Explanation: It keeps request logic, token handling, and endpoint paths in one place. That makes the code easier to maintain and reduces duplication across pages like dashboard, auth, mood tracking, and journal screens.
+
+43. How does the app handle partial failures?
+Explanation: The dashboard and risk features are designed to keep working even if one service or endpoint fails. For example, the risk route can fall back to a heuristic model, and the dashboard can still render available sections even when some data requests fail.
+
+44. What makes the data flow in this project more than simple CRUD?
+Explanation: The app does store and retrieve records, but it also transforms that data into insights, scores, forecasts, and risk labels. That means the system adds analytics and decision support on top of basic database operations.
+
+45. How do you ensure the risk model receives useful input?
+Explanation: The backend normalizes recent mood and journal data into a compact feature set before calling the ML service. This avoids sending raw noisy data and keeps the prediction contract stable.
+
+46. Why does the ML service return both a label and a reason?
+Explanation: A label alone is not enough for a wellness application. The reason helps users and developers understand the output, makes debugging easier, and supports safer product decisions.
+
+47. What would you say about the decision to use React Router with protected routes?
+Explanation: React Router gives the app a clean single-page navigation model, while protected routes control access to private experiences. Together, they make the UI feel seamless while still enforcing authentication.
+
+48. How do charts and summaries improve the user experience?
+Explanation: Charts make emotional trends visible at a glance, while summaries translate data into plain language. This combination helps users act on insights instead of just seeing raw numbers.
+
+49. What does observability add to a product like this?
+Explanation: Observability helps track request IDs, frontend errors, and performance signals so issues can be diagnosed faster. That matters in a multi-service app because failures may come from the UI, the backend, the database, or the ML service.
+
+50. If an interviewer asked why this project is technically interesting, what would you say?
+Explanation: It combines authentication, secure APIs, analytics, scheduled jobs, ML inference, frontend state management, and graceful fallback logic in one product. That makes it a strong example of building a production-style full-stack system instead of just a simple demo.

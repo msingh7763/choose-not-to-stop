@@ -44,7 +44,16 @@ const Register = () => {
     );
 
     if (result.success) {
-      navigate('/dashboard');
+      navigate('/link-sent', {
+        state: {
+          kind: 'verification',
+          title: 'Verify your email',
+          message: result.message || 'Registration successful. Please verify your email before signing in.',
+          link: result.verificationUrl || '',
+          primaryLabel: 'Go to sign in',
+          primaryTo: '/login',
+        },
+      });
     } else {
       setError(result.message);
     }
@@ -53,24 +62,24 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900">
-      <div className="w-full max-w-md p-8 glass-strong">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-[#DCE1DA] via-[#F4DDD5] to-[#DCE1DA]">
+      <div className="w-full max-w-md p-8 glass-strong border border-[#A4BBAC]">
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold text-transparent bg-gradient-to-r from-electric-400 to-electric-600 bg-clip-text">
+          <h1 className="mb-2 text-4xl font-black text-black" style={{ fontFamily: 'Poppins, Inter, sans-serif' }}>
             Choose Not To Stop
           </h1>
-          <p className="text-gray-400">Create your account</p>
+          <p className="text-black font-semibold">Create your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="px-4 py-3 text-red-200 border rounded-lg bg-red-500/20 border-red-500/50">
+            <div className="px-4 py-3 text-sm text-black font-semibold border rounded-lg bg-[#ECB7B3]/40 border-[#8E929B]">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
+            <label className="block mb-2 text-sm font-bold text-black">
               Name
             </label>
             <input
@@ -79,13 +88,13 @@ const Register = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field text-black font-medium"
               placeholder="Your name"
             />
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
+            <label className="block mb-2 text-sm font-bold text-black">
               Email
             </label>
             <input
@@ -94,13 +103,13 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field text-black font-medium"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
+            <label className="block mb-2 text-sm font-bold text-black">
               Password
             </label>
             <input
@@ -109,16 +118,16 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field text-black font-medium"
               placeholder="••••••••"
             />
-            <p className="mt-2 text-xs text-gray-400">
+            <p className="mt-2 text-xs text-black font-medium">
               Must be at least 10 characters and include uppercase, lowercase, number, and special character.
             </p>
           </div>
 
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-300">
+            <label className="block mb-2 text-sm font-bold text-black">
               Confirm Password
             </label>
             <input
@@ -127,7 +136,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field text-black font-medium"
               placeholder="••••••••"
             />
           </div>
@@ -135,15 +144,15 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary"
+            className="w-full btn-primary text-center"
           >
             {loading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-400">
+        <p className="mt-6 text-center text-black font-medium">
           Already have an account?{' '}
-          <Link to="/login" className="text-electric-400 hover:text-electric-300">
+          <Link to="/login" className="text-black font-black hover:underline">
             Sign in
           </Link>
         </p>
@@ -153,4 +162,3 @@ const Register = () => {
 };
 
 export default Register;
-

@@ -60,9 +60,11 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
+      const isVerificationError = error.response?.status === 403;
       return {
         success: false,
         message: error.response?.data?.message || 'Login failed',
+        verificationRequired: isVerificationError,
       };
     }
   };
@@ -70,14 +72,12 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       const response = await authAPI.register({ name, email, password });
-      const { token, user } = response.data;
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
-      setIsAuthenticated(true);
-
-      return { success: true };
+      return {
+        success: true,
+        message: response.data.message,
+        verificationUrl: response.data.verificationUrl,
+      };
     } catch (error) {
       const fieldErrors = error.response?.data?.errors;
       const firstFieldError = Array.isArray(fieldErrors) && fieldErrors.length > 0
