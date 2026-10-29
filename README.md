@@ -196,13 +196,53 @@ A full-stack MERN application that helps users track their emotional well-being,
    ```
    App runs on `http://localhost:5173`
 
+### ML Service Setup
+
+The ML service requires Python 3.11 or another Python version supported by
+the pinned dependencies in `ml_service/requirements.txt`. Python versions
+that do not have compatible prebuilt scikit-learn wheels may fail with a
+`C++ 14.0 or greater is required` error.
+
+On Windows PowerShell:
+
+1. **Navigate to the ML service directory:**
+
+   ```powershell
+   cd ml_service
+   ```
+
+2. **Create and activate a virtual environment:**
+
+   ```powershell
+   py -3.11 -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+3. **Install Python dependencies:**
+
+   ```powershell
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. **Start the ML API:**
+
+   ```powershell
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+The ML API runs on `http://localhost:8000`. Open
+`http://localhost:8000/docs` for Swagger documentation. If Python 3.11 is
+not installed, check available Python installations with `py -0p`.
+
 ## 🚀 Quick Start
 
 1. Start MongoDB
 2. Start backend: `cd backend && npm run dev`
-3. Start frontend: `cd frontend && npm run dev`
-4. Open `http://localhost:5173` in your browser
-5. Register a new account or login with test credentials
+3. Start the ML service: `cd ml_service && uvicorn main:app --reload --port 8000`
+4. Start frontend: `cd frontend && npm run dev`
+5. Open `http://localhost:5173` in your browser
+6. Register a new account or login with test credentials
 
 ## 📁 Project Structure
 
